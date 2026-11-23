@@ -436,15 +436,7 @@ function panel(a){
       save(d);refresh();msg.textContent="Progreso cargado y unido al de este dispositivo.";
     }catch(e){msg.textContent="No se ha podido leer el archivo. Comprueba que es una copia guardada desde el área de alumnos."}
   };
-  const del=el("button",{class:"mini warn",type:"button"},"Borrar mi progreso");
-  const conf=el("div",{class:"confirm"});conf.hidden=true;
-  const si=el("button",{class:"mini warn",type:"button"},"Sí, borrar");
-  const no=el("button",{class:"mini",type:"button"},"Cancelar");
-  conf.append(el("p",{},"¿Seguro? Se borrarán tus tests hechos y tus preguntas falladas de este dispositivo. No se puede deshacer."),el("div",{class:"acts"},si,no));
-  del.onclick=()=>{msg.textContent="";conf.hidden=false;no.focus()};
-  no.onclick=()=>{conf.hidden=true;del.focus()};
-  si.onclick=()=>{try{LS.removeItem(skey())}catch(e){}conf.hidden=true;refresh();msg.textContent="Progreso borrado. Empiezas de cero en este dispositivo.";del.focus()};
-  const box=el("section",{class:"prog-panel"},el("h3",{},"Tu progreso"),st,el("div",{class:"acts"},exp,imp,del,file),conf,msg,el("p",{class:"note"},"Tu progreso se guarda en este dispositivo y navegador. Para seguir en otro (por ejemplo, del ordenador al móvil), guarda una copia aquí y cárgala allí."));
+  const box=el("section",{class:"prog-panel"},el("h3",{},"Tu progreso"),st,el("div",{class:"acts"},exp,imp,file),msg,el("p",{class:"note"},"Tu progreso se guarda en este dispositivo y navegador. Para seguir en otro (por ejemplo, del ordenador al móvil), guarda una copia aquí y cárgala allí."));
   box.dataset.panel="1";a.append(box);st.textContent=stats();
 }
 function refresh(){
