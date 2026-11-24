@@ -188,12 +188,12 @@ const FOTO_M="data:image/webp;base64,UklGRrRLAABXRUJQVlA4IKhLAACwRgKdASogA/QBPpV
 const BLOQUES=[["A · Temas comunes","Temas 1 a 4",1,4],["B · Temas específicos","Temas 5 a 20 · también entran en el supuesto práctico",5,20]];
 function testBtn(it){if(it.kind==="sup"){const b=el("button",{class:"btn",type:"button"},"Ver los supuestos",el("span",{class:"sub"},"SUPUESTOS PRÁCTICOS · "+it.meta));b.onclick=()=>openTest(it);return b}if(it.locked){const b=el("button",{class:"btn locked",type:"button"},"🔒 "+it.label,el("span",{class:"sub"},"Solo para alumnos · "+it.meta));b.onclick=()=>{document.getElementById("aviso").hidden=false;document.getElementById("avisoX").focus()};return b}const b=el("button",{class:"btn",type:"button"},(session&&session.demo?"Hacer el test de prueba ":"Hacer el test "),el("span",{class:"sub"},it.label+" · "+it.meta));b.onclick=()=>openTest(it);if(window.PROG)PROG.badge(b,it);return b}
 let gid=0;
-function grupos(tests,sups){sups=sups||[];
+function grupos(tests,sups,n){sups=sups||[];
   const wrap=el("div",{}), row=el("div",{class:"tests"});
   const defs=[["BLOQUE COMPLETO",tests.filter(x=>!/ESENCIAL|NIVEL B[ÁA]SICO/i.test(x.label))],["BLOQUE ESENCIAL",tests.filter(x=>/ESENCIAL|NIVEL B[ÁA]SICO/i.test(x.label))],["SUPUESTOS PRÁCTICOS",sups]];
   const panels=[];
   for(const [nombre,list] of defs){
-    if(!list.length){if(nombre==="SUPUESTOS PRÁCTICOS")row.append(el("span",{class:"btn soon"},el("span",{class:"gtit"},nombre),el("span",{class:"sub"},"Próximamente")));continue;}
+    if(!list.length){if(nombre==="SUPUESTOS PRÁCTICOS"&&!(n>=1&&n<=4))row.append(el("span",{class:"btn soon"},el("span",{class:"gtit"},nombre),el("span",{class:"sub"},"Próximamente")));continue;}
     const id="g"+(++gid);
     const panel=el("div",{class:"tests subtests",id}); panel.hidden=true; for(const it of list) panel.append(testBtn(it));
     const b=el("button",{class:"btn grupo",type:"button"},el("span",{class:"gtit"},nombre,el("span",{class:"chev","aria-hidden":"true"},"▾")),el("span",{class:"sub"},(nombre==="SUPUESTOS PRÁCTICOS"?"Casos resueltos paso a paso · "+(list.length===1?"1 documento":list.length+" documentos"):(nombre==="BLOQUE ESENCIAL"?"Lo más probable en examen, en orden aleatorio":"Todo el articulado, apartado por apartado")+" · "+(list.length===1?"1 test":list.length+" tests"))));
@@ -221,7 +221,7 @@ function render(){
       if(session.demo) head.append(libres?el("span",{class:"pill"},"Test de prueba disponible"):el("span",{class:"pill soon"},"Prueba próximamente"));
       else if(tests.length) head.append(el("span",{class:"pill"},tests.length===1?"1 test disponible":tests.length+" tests disponibles"));
       const body=el("div",{class:"tbody"},head,el("p",{},tm.desc));
-      body.append(grupos(tests,sups));if(window.PROG)PROG.tema(body,tm,tests);
+      body.append(grupos(tests,sups,tm.n));if(window.PROG)PROG.tema(body,tm,tests);
       ol.append(el("li",{class:"tema"+((session.demo?libres:tests.length)?" has-test":"")},el("div",{class:"tnum"},String(tm.n)),body));
     }
     a.append(el("div",{class:"bloque"},el("div",{class:"bloque-h"},el("h3",{},nombre),el("span",{},rango)),ol));
