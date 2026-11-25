@@ -190,13 +190,13 @@ function testBtn(it){if(it.kind==="sup"){const b=el("button",{class:"btn",type:"
 let gid=0;
 function grupos(tests,sups,n){sups=sups||[];
   const wrap=el("div",{}), row=el("div",{class:"tests"});
-  const defs=[["BLOQUE COMPLETO",tests.filter(x=>!/ESENCIAL|NIVEL B[ÁA]SICO/i.test(x.label))],["BLOQUE ESENCIAL",tests.filter(x=>/ESENCIAL|NIVEL B[ÁA]SICO/i.test(x.label))],["SUPUESTOS PRÁCTICOS",sups]];
+  const defs=[["BLOQUE COMPLETO",tests.filter(x=>!/ESENCIAL|NIVEL B[ÁA]SICO|PR[ÁA]CTICO/i.test(x.label))],["BLOQUE ESENCIAL",tests.filter(x=>/ESENCIAL|NIVEL B[ÁA]SICO/i.test(x.label))],["BLOQUE PRÁCTICO",tests.filter(x=>/PR[ÁA]CTICO/i.test(x.label))],["SUPUESTOS PRÁCTICOS",sups]];
   const panels=[];
   for(const [nombre,list] of defs){
     if(!list.length){if(nombre==="SUPUESTOS PRÁCTICOS"&&!(n>=1&&n<=4))row.append(el("span",{class:"btn soon"},el("span",{class:"gtit"},nombre),el("span",{class:"sub"},"Próximamente")));continue;}
     const id="g"+(++gid);
     const panel=el("div",{class:"tests subtests",id}); panel.hidden=true; for(const it of list) panel.append(testBtn(it));
-    const b=el("button",{class:"btn grupo",type:"button"},el("span",{class:"gtit"},nombre,el("span",{class:"chev","aria-hidden":"true"},"▾")),el("span",{class:"sub"},(nombre==="SUPUESTOS PRÁCTICOS"?"Casos resueltos paso a paso · "+(list.length===1?"1 documento":list.length+" documentos"):(nombre==="BLOQUE ESENCIAL"?"Lo más probable en examen, en orden aleatorio":"Todo el articulado, apartado por apartado")+" · "+(list.length===1?"1 test":list.length+" tests"))));
+    const b=el("button",{class:"btn grupo",type:"button"},el("span",{class:"gtit"},nombre,el("span",{class:"chev","aria-hidden":"true"},"▾")),el("span",{class:"sub"},(nombre==="SUPUESTOS PRÁCTICOS"?"Casos resueltos paso a paso · "+(list.length===1?"1 documento":list.length+" documentos"):(nombre==="BLOQUE ESENCIAL"?"Lo más probable en examen, en orden aleatorio":(nombre==="BLOQUE PRÁCTICO"?"Preguntas tipo supuesto práctico, con justificación":"Todo el articulado, apartado por apartado"))+" · "+(list.length===1?"1 test":list.length+" tests"))));
     b.setAttribute("aria-expanded","false"); b.setAttribute("aria-controls",id);
     b.onclick=()=>{const open=panel.hidden; for(const [pb,pp] of panels){pp.hidden=true;pb.setAttribute("aria-expanded","false")} if(open){panel.hidden=false;b.setAttribute("aria-expanded","true")}};
     panels.push([b,panel]); row.append(b,panel);
