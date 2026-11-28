@@ -237,11 +237,11 @@ async function openTest(it){
     document.getElementById("viewer").hidden=false; document.getElementById("back").focus();
     try{const r=await fetch(it.src,{cache:"no-cache"});if(!r.ok)throw 0;const ct=new Uint8Array(await r.arrayBuffer());
       const html=new TextDecoder().decode(await gunzip(await aesDec(ub64(it.k),ub64(it.iv),ct)));
-      if(!document.getElementById("viewer").hidden) fr.srcdoc=html;
+      if(!document.getElementById("viewer").hidden) fr.srcdoc=html+ANC;
     }catch(e){fr.srcdoc='<p style="font:16px system-ui,sans-serif;padding:24px;color:#a33">No se han podido cargar los supuestos. Comprueba tu conexión e inténtalo de nuevo.</p>'}
     return;
   }
-  document.getElementById("frame").srcdoc=window.PROG?PROG.wrap(it):it.html;
+  document.getElementById("frame").srcdoc=(window.PROG?PROG.wrap(it):it.html)+ANC;
   document.getElementById("viewer").hidden=false;
   document.getElementById("back").focus();
 }
@@ -377,7 +377,7 @@ function fallosDe(n){return Object.entries(load().fails).filter(([k,f])=>f.n===n
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function show(title,html){
   document.getElementById("vTitle").textContent=title;
-  document.getElementById("frame").srcdoc=html;
+  document.getElementById("frame").srcdoc=html+ANC;
   document.getElementById("viewer").hidden=false;document.getElementById("back").focus();
 }
 function repaso(n,tests){
@@ -396,7 +396,8 @@ function verFallos(n){
   const arr=fallosDe(n).map(x=>x[1]).sort((x,y)=>(y.times-x.times)||(y.date-x.date));
   const L=["A","B","C","D"];
   const items=arr.map(f=>'<li class="q"><div class="meta">'+escH(f.src)+" · pregunta "+escH(f.num)+" · fallada "+veces(f.times)+" · última vez el "+fdate(f.date)+'</div><div class="stem">'+escH(f.q[0])+'</div>'+f.q[1].map((o,j)=>{const l=L[j],ok=l===f.q[2],bad=l===f.mine&&!ok;return '<div class="o'+(ok?" ok":"")+(bad?" bad":"")+'"><b>'+l+'</b><span>'+escH(o)+(ok?" <em>✓ correcta</em>":"")+(bad?" <em>✗ marcaste esta</em>":"")+'</span></div>'}).join("")+"</li>").join("");
-  const html='<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mis fallos · Tema '+n+'</title><style>:root{--ink:#18213a;--muted:#5a6479;--bg:#f5f6f9;--paper:#fff;--ok:#1d7a4b;--ok-soft:#e3f4ea;--bad:#b42318;--bad-soft:#fdecea}@media (prefers-color-scheme:dark){:root{--ink:#e6e9f0;--muted:#9aa3b5;--bg:#10141d;--paper:#181e2a;--ok:#6fd39c;--ok-soft:#17322a;--bad:#ff9d94;--bad-soft:#3a1f1f}}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Libre Franklin","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}.wrap{max-width:760px;margin:0 auto;padding:22px 16px 48px}h1{font:700 22px/1.25 Literata,Georgia,serif;margin:0 0 6px;text-wrap:balance}.intro{color:var(--muted);margin:0 0 18px}ol{list-style:none;margin:0;padding:0}.q{background:var(--paper);border-radius:12px;padding:14px 16px;margin:0 0 12px;box-shadow:0 0 0 1px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05)}.meta{font-size:13px;color:var(--muted);margin-bottom:6px}.stem{font-weight:600;margin-bottom:8px;text-wrap:pretty}.o{display:flex;gap:10px;padding:7px 10px;border-radius:8px;margin:3px 0}.o b{flex:none;width:1.1em}.o em{font-style:normal;font-weight:700;font-size:13.5px;white-space:nowrap}.o.ok{background:var(--ok-soft);color:var(--ok);font-weight:600}.o.bad{background:var(--bad-soft);color:var(--bad)}</style></head><body><div class="wrap"><h1>Mis fallos · Tema '+n+'</h1><p class="intro">'+(arr.length===1?"1 pregunta":arr.length+" preguntas")+' que has fallado y aún no has acertado dos veces seguidas. Primero, las que más veces has fallado.</p><ol>'+items+"</ol></div></body></html>";
+  const html='<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Mis fallos · Tema '+n+'</title><style>:root{--ink:#18213a;--muted:#5a6479;--bg:#f5f6f9;--paper:#fff;--ok:#1d7a4b;--ok-soft:#e3f4ea;--bad:#b42318;--bad-soft:#fdecea}@media (prefers-color-scheme:dark){:root{--ink:#e6e9f0;--muted:#9aa3b5;--bg:#10141d;--paper:#181e2a;--ok:#6fd39c;--ok-soft:#17322a;--bad:#ff9d94;--bad-soft:#3a1f1f}}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Libre Franklin","Segoe UI",system-ui,sans-serif;-webkit-font-smoothing:antialiased}.wrap{max-width:760px;margin:0 auto;padding:22px 16px 48px}h1{font:700 22px/1.25 Literata,Georgia,serif;margin:0 0 6px;text-wrap:balance}.intro{color:var(--muted);margin:0 0 18px}ol{list-style:none;margin:0;padding:0}.q{background:var(--paper);border-radius:12px;padding:14px 16px;margin:0 0 12px;box-shadow:0 0 0 1px rgba(0,0,0,.07),0 1px 2px rgba(0,0,0,.05)}.meta{font-size:13px;color:var(--muted);margin-bottom:6px}.stem{font-weight:600;margin-bottom:8px;text-wrap:pretty}.o{display:flex;gap:10px;padding:7px 10px;border-radius:8px;margin:3px 0}.o b{flex:none;width:1.1em}.o em{font-style:normal;font-weight:700;font-size:13.5px;white-space:nowrap}.o.ok{background:var(--ok-soft);color:var(--ok);font-weight:600}.o.bad{background:var(--bad-soft);color:var(--bad)}</style><script>var ANC='<script>document.addEventListener("click",function(e){if(e.defaultPrevented)return;var a=e.target.closest&&e.target.closest("a[href^=\'#\']");if(!a)return;e.preventDefault();var id=decodeURIComponent(a.getAttribute("href").slice(1)),t=id?(document.getElementById(id)||document.getElementsByName(id)[0]):null;if(t)t.scrollIntoView({behavior:"smooth",block:"start"});else window.scrollTo({top:0,behavior:"smooth"});});<\/script>';</script>
+</head><body><div class="wrap"><h1>Mis fallos · Tema '+n+'</h1><p class="intro">'+(arr.length===1?"1 pregunta":arr.length+" preguntas")+' que has fallado y aún no has acertado dos veces seguidas. Primero, las que más veces has fallado.</p><ol>'+items+"</ol></div></body></html>";
   show("Tema "+n+" · Mis fallos",html);
 }
 
